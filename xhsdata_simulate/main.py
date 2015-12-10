@@ -7,32 +7,32 @@ __author__ = 'zhangtaichao'
 def post_event_api():
     host = params.host
     for event in params.event_list:
-        url = host + params.apis['event']
-        common_param            = params.common_param()
-        func = event + "_param"
-        res = runpy.run_module('params',run_name=func )
-        event_param = res[func]()
-        data = json.dumps(event_param)
-        data = data.replace(' ','')
-        common_param['data'] = data
-        param = urllib.parse.urlencode(common_param,encoding='utf-8')
+        url                                       = host + params.apis['event']
+        common_param                              = params.common_param()
+        func                                      = event + "_param"
+        res                                       = runpy.run_module('params',run_name=func )
+        event_param                               = res[func]()
+        data                                      = json.dumps(event_param,ensure_ascii=False)
+        data                                      = data.replace(' ','')
+        common_param['data']                      = data
+        print(common_param)
+        param                                     = urllib.parse.urlencode(common_param,encoding='utf-8',safe=":")
         print(param)
-        param                   = param.encode('utf-8')
-        req                     = urllib.request.Request(url=url,method='POST',data=param)
+        param                                     = param.encode('utf-8')
+        req                                       = urllib.request.Request(url=url,method='POST',data=param)
         req.add_header('X-Forword-For','1.1.1.1')
         print(url)
-        with urllib.request.urlopen(req) as f:
+        with urllib.request.urlopen(req) as f                                                                :
             print(f.status)
 
 def post_data_api():
     url                                       = params.host + params.apis['data']
     common_param                              = params.common_param()
     data_param                                = params.api_data_param()
-    data                                      = json.dumps(data_param)
+    data                                      = json.dumps(data_param,ensure_ascii=False)
     data                                      = data.replace(' ','')
     common_param['data']                      = data
-    param                                     = urllib.parse.urlencode(common_param,encoding='utf-8')
-    print(param)
+    param                                     = urllib.parse.urlencode(common_param,encoding='utf-8',safe=":")
     param                                     = param.encode('utf-8')
     req                                       = urllib.request.Request(url=url,method='POST',data=param)
     req.add_header('X-Forword-For','1.1.1.1')

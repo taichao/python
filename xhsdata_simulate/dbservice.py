@@ -16,6 +16,20 @@ class DBService:
         except mysql.connector.Error as e:
             print('connect fails!{}'.format(e))
 
+    def executeQuery(self,sql,data = None):
+        cnn  = self.__connect()
+        try:
+            cursor = cnn.cursor()
+            if data is None:
+                cursor.execute(sql)
+            else:
+                cursor.execute(sql,data)
+            row = cursor.fetchall()
+            return row
+        finally:
+            cursor.close()
+            cnn.close()
+
     def create_user(self):
         user_id = int(time.time() * 1000)
         name = user_id
@@ -83,3 +97,11 @@ class DBService:
         finally:
             cursor.close()
             cnn.close()
+
+
+
+    def get_area(self):
+        id = random.randint(1,1700000)
+        sql = "select ip,country,province,city from sh_ip_factory where id=%d" % id
+        res = self.executeQuery(sql)
+        return res

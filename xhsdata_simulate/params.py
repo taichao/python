@@ -13,7 +13,7 @@ apis = {
 event_list = ["ad_show", "ad_click", "page_stay", "share", "comment", "collection" ]
 client_type_list = ["A", "I"]
 app_version_list = ["1.0", "2.0", "3.0"]
-channel_list = ["anzhi", "wandoujia", "baidu", "yingyongbao", "91助手"]
+channel_list = ["安智", "豌豆荚", "百度", "应用吧", "91助手"]
 from_path_list = ["MainApplication", "searchApplication", "detailApplication", "listApplication"]
 
 base_url_list = [
@@ -25,7 +25,8 @@ base_url_list = [
 page_from_list = ["search","index","menu"]
 page_from_id_list = [ "1","2","3" ]
 
-page_type_list = ["index","search","news","主页","搜索页","详情页"]
+#page_type_list = ["index","search","news","主页","搜索页","详情页"]
+page_type_list = ["主页","搜索页","详情页"]
 
 
 device_name_list = [
@@ -66,6 +67,11 @@ def common_param():
 
 
 def api_data_param():
+    row = dbservice.DBService().get_area()
+    row = row[0]
+    print(row)
+    if row is not None:
+        ip,provice,city,area = row
     resolution_list = ["640x960", "100x100", "1024x680","1920x1000"]
     platform_list = ["android","ios"]
     os_list = ["ios","android","minui","huaweios",'3xos']
@@ -81,7 +87,10 @@ def api_data_param():
         "os"           : os_list[random.randint(0,len(os_list) -1)],
         "os_version"   : os_version_list[random.randint(0,len(os_version_list) -1)],
         "language"     : "zh",
-        "wifimac"      : "d8-55-a3-ed-24-cb"
+        "wifimac"      : "d8-55-a3-ed-24-cb",
+        "privince": provice,
+        "city":city,
+        "address":area
     }
     return cp
 
