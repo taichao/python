@@ -1,0 +1,5 @@
+load_user.sh
+__pycache__/
+rsync.sh
+exclude.list
+*.log
