@@ -102,6 +102,6 @@ class DBService:
 
     def get_area(self):
         id = random.randint(1,1700000)
-        sql = "select ip,country,province,city from sh_ip_factory where id=%d" % id
+        sql = "select ip,country,province,city,county from sh_ip_factory where id=%d" % id
         res = self.executeQuery(sql)
         return res

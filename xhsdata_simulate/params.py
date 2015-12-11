@@ -10,7 +10,7 @@ apis = {
     'error': '/api/error/index',
     'event': '/api/event/index'
 }
-event_list = ["ad_show", "ad_click", "page_stay", "share", "comment", "collection" ]
+event_list = ["ad_show", "ad_click", "page_stay", "share", "comment", "collection" , "use_time"]
 client_type_list = ["A", "I"]
 app_version_list = ["1.0", "2.0", "3.0"]
 channel_list = ["安智", "豌豆荚", "百度", "应用吧", "91助手"]
@@ -25,8 +25,7 @@ base_url_list = [
 page_from_list = ["search","index","menu"]
 page_from_id_list = [ "1","2","3" ]
 
-#page_type_list = ["index","search","news","主页","搜索页","详情页"]
-page_type_list = ["主页","搜索页","详情页"]
+page_type_list = ["index","search","news","主页","搜索页","详情页"]
 
 
 device_name_list = [
@@ -71,7 +70,7 @@ def api_data_param():
     row = row[0]
     print(row)
     if row is not None:
-        ip,provice,city,area = row
+        ip,country,province,city,area = row
     resolution_list = ["640x960", "100x100", "1024x680","1920x1000"]
     platform_list = ["android","ios"]
     os_list = ["ios","android","minui","huaweios",'3xos']
@@ -88,16 +87,26 @@ def api_data_param():
         "os_version"   : os_version_list[random.randint(0,len(os_version_list) -1)],
         "language"     : "zh",
         "wifimac"      : "d8-55-a3-ed-24-cb",
-        "privince": provice,
+        "country":country,
+        "province": province,
         "city":city,
         "address":area
+    }
+    return cp
+
+def api_error_param():
+    timen = int ( time.time() * 1000 )
+    error_list = ["Null","e","e1","e22","e333","e444"]
+    cp = {
+        "time":timen,
+        "stacktrace":error_list[random.randint(0,len(error_list) -1)]
     }
     return cp
 
 def page_stay_param():
     out_time = int(time.time() * 1000)
     stay_time = random.randint(1,1000)
-    int_time = out_time - stay_time
+    in_time = out_time - stay_time
 
     param = {
         "aname":"page_stay",
@@ -106,7 +115,7 @@ def page_stay_param():
         "page_from_id" : page_from_id_list[random.randint(0,len(page_from_id_list) -1)],
         "page_type"    : page_type_list[random.randint(0,len(page_type_list) -1)],
         "page_key"     : filedata.get_news_id().__next__(),
-        "int_time"     : str(int_time),
+        "in_time"     : str(in_time),
         "out_time"     : str(out_time),
         "stay_time"    : str(stay_time),
         "read_status"  : str(random.randint(1,100))
@@ -165,5 +174,18 @@ def collection_param():
         "base_url"     : base_url_list[random.randint(0,len(base_url_list) -1 )],
         "article_menu" : filedata.get_category_id().__next__(),
         "article_key": filedata.get_news_id().__next__()
+    }
+    return param
+
+
+def use_time_param():
+    out_time = int(time.time() * 1000)
+    stay_time = random.randint(1,1000)
+    in_time = out_time - stay_time
+    param = {
+        "aname":"use_time",
+        "in_time"     : str(in_time),
+        "out_time"     : str(out_time),
+        "stay_time"    : str(stay_time),
     }
     return param
