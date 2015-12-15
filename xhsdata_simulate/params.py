@@ -25,7 +25,7 @@ base_url_list = [
 page_from_list = ["search","index","menu"]
 page_from_id_list = [ "1","2","3" ]
 
-page_type_list = ["index","search","news","主页","搜索页","详情页"]
+page_type_list = ["index","search","news"]
 
 
 device_name_list = [
@@ -37,18 +37,7 @@ device_name_list = [
     "Ipad"
 ]
 
-def common_param():
-    uid = uuid.uuid1()
-    ran = random.randint(1,10)
-    if ran < 8:
-        client_id = uid
-        user_id = ''
-    else:
-        ds = dbservice.DBService()
-        ds.create_user()
-        res = ds.get_user()
-        print('get_user:' + str( res ))
-        user_id,client_id = res
+def common_param(client_id,user_id):
     cp = {
         "appkey"      : "be631299c0fd9f16cf4e789d72630caa",
         "client_id"   : client_id,
@@ -68,7 +57,6 @@ def common_param():
 def api_data_param():
     row = dbservice.DBService().get_area()
     row = row[0]
-    print(row)
     if row is not None:
         ip,country,province,city,area = row
     resolution_list = ["640x960", "100x100", "1024x680","1920x1000"]

@@ -1,5 +1,5 @@
 # coding: utf-8
-import mysql.connector,time,random,uuid
+import mysql.connector,time,random,uuid, datetime
 
 class DBService:
     def __connect(self):
@@ -30,7 +30,18 @@ class DBService:
             cursor.close()
             cnn.close()
 
-    def create_user(self):
+    def executeUpdate(self,sql,data):
+        cnn  = self.__connect()
+        try:
+            cursor = cnn.cursor()
+            cursor.execute(sql,data)
+            cnn.commit()
+        finally:
+            cursor.close()
+            cnn.close()
+
+
+    def create_user(self,client_id = None):
         user_id = int(time.time() * 1000)
         name = user_id
         province_list = [ '上海', '云南', '内蒙古', '北京', '台湾', '吉林', '四川', '天津', '宁夏', '安徽', '山东', '山西', '广东', '广西', '新疆', '江苏', '江西', '河北', '河南', '浙江', '海南', '湖北', '湖南', '澳门', '甘肃', '福建', '西藏', '贵州', '辽宁', '重庆', '陕西', '青海', '香港', '黑龙江' ]
@@ -38,7 +49,10 @@ class DBService:
         create_date = time.strftime('%Y-%m-%d %T',time.localtime(time.time()))
         channel_list = ["3001","3002","3002"]
         user_channel = channel_list[random.randint(0,2)]
-        client_id = str( uuid.uuid1() )
+        if client_id is None:
+            client_id = str( uuid.uuid1() )
+        else:
+            client_id = str(client_id)
         sql = """
             INSERT INTO `xhs_data`.`test_mob_user`
             (`user_id`,
@@ -53,29 +67,18 @@ class DBService:
             )
         """
         data = (user_id,name,provice,create_date,user_channel,client_id)
-        cnn  = self.__connect()
-        try:
-            cursor = cnn.cursor()
-            cursor.execute(sql,data)
-            cnn.commit()
-        finally:
-            cursor.close()
-            cnn.close()
+        self.executeUpdate(sql,data)
 
-    def get_user(self):
-        sql = "SELECT user_id,client_id FROM xhs_data.test_mob_user order by rand() limit 1"
-        cnn  = self.__connect()
-        try:
-            cursor = cnn.cursor()
-            cursor.execute(sql)
-            row = cursor.fetchone()
-            if row is not None:
-                return row
-            else:
-                print("get_user_error")
-        finally:
-            cursor.close()
-            cnn.close()
+    def get_user(self, client_id = None):
+        if client_id is None:
+            sql = "SELECT user_id,client_id FROM xhs_data.test_mob_user order by rand() limit 1"
+            data = None
+        else:
+            sql = "SELECT user_id,client_id FROM xhs_data.test_mob_user where client_id=%s"
+            data = (client_id,)
+        rows = self.executeQuery(sql,data)
+        if len(rows) > 0:
+            return rows[0]
 
     def get_user_forfile(self,day,hour):
         sql = """
@@ -105,3 +108,24 @@ class DBService:
         sql = "select ip,country,province,city,county from sh_ip_factory where id=%d" % id
         res = self.executeQuery(sql)
         return res
+
+
+    def create_client_id(self):
+        client_id = uuid.uuid1();
+        sql = "insert into test_mob_device values(%s,%s)"
+        today = datetime.datetime.today()
+        data = (str(client_id), today)
+        self.executeUpdate(sql,data)
+        return client_id
+
+    def get_client_info(self):
+        sql = "select client_id from xhs_data.test_mob_device order by rand() limit 1"
+        sql = """
+         select a.client_id,b.user_id from xhs_data.test_mob_device a
+         left join xhs_data.test_mob_user b on a.client_id = b.client_id
+          order by rand() limit 1
+        """
+        rows = self.executeQuery(sql)
+        if len(rows) > 0:
+            return rows[0]
+
