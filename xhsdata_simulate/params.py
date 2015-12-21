@@ -59,6 +59,10 @@ def api_data_param():
     row = row[0]
     if row is not None:
         ip,country,province,city,area = row
+        if province == city:
+            city = area
+        area = '{} {} {}'.format(province,city,area)
+        print(area)
     resolution_list = ["640x960", "100x100", "1024x680","1920x1000"]
     platform_list = ["android","ios"]
     os_list = ["ios","android","minui","huaweios",'3xos']

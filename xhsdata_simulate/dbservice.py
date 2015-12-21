@@ -27,8 +27,11 @@ class DBService:
             row = cursor.fetchall()
             return row
         finally:
-            cursor.close()
-            cnn.close()
+            if cursor:
+                cursor.close()
+            if cnn:
+                cnn.close()
+
 
     def executeUpdate(self,sql,data):
         cnn  = self.__connect()
@@ -37,8 +40,10 @@ class DBService:
             cursor.execute(sql,data)
             cnn.commit()
         finally:
-            cursor.close()
-            cnn.close()
+            if cursor:
+                cursor.close()
+            if cnn:
+                cnn.close()
 
 
     def create_user(self,client_id = None):
@@ -47,7 +52,7 @@ class DBService:
         province_list = [ '上海', '云南', '内蒙古', '北京', '台湾', '吉林', '四川', '天津', '宁夏', '安徽', '山东', '山西', '广东', '广西', '新疆', '江苏', '江西', '河北', '河南', '浙江', '海南', '湖北', '湖南', '澳门', '甘肃', '福建', '西藏', '贵州', '辽宁', '重庆', '陕西', '青海', '香港', '黑龙江' ]
         provice = province_list[ random.randint(0,len(province_list) -1) ]
         create_date = time.strftime('%Y-%m-%d %T',time.localtime(time.time()))
-        channel_list = ["3001","3002","3002"]
+        channel_list = ["3001","3002","3003"]
         user_channel = channel_list[random.randint(0,2)]
         if client_id is None:
             client_id = str( uuid.uuid1() )

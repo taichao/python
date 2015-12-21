@@ -8,6 +8,10 @@ __author__ = 'zhangtaichao'
 def post_event_api(client_id,user_id = None):
     host = params.host
     for event in params.event_list:
+        if event == 'ad_click':
+            if random.randint(1,100) < 90:
+                print('ad_click pass')
+                continue
         url          = host + params.apis['event']
         common_param = params.common_param(client_id,user_id)
         func         = event + "_param"
@@ -44,22 +48,25 @@ def post_error_api(client_id,user_id = None):
 
 if __name__ == '__main__':
     while True:
-        print(datetime.datetime.today())
-        if random.randint(0,10) > 8:
-            dbservice.DBService().create_client_id()
-        info = dbservice.DBService().get_client_info()
-        print(info)
-        client_id = info[0]
-        user_id = info[1]
-        if user_id is None:
-            ran = random.randint(1,100)
-            if ran > 90:
-                ds = dbservice.DBService()
-                ds.create_user(client_id)
-                user_id = ds.get_user()[0]
-            else:
-                user_id = ''
-        post_data_api(client_id,user_id)
-        post_error_api(client_id,user_id)
-        post_event_api(client_id,user_id)
-        time.sleep(3)
+        try:
+            print(datetime.datetime.today())
+            if random.randint(0,10) > 8:
+                dbservice.DBService().create_client_id()
+            info = dbservice.DBService().get_client_info()
+            print(info)
+            client_id = info[0]
+            user_id = info[1]
+            if user_id is None:
+                ran = random.randint(1,100)
+                if ran > 90:
+                    ds = dbservice.DBService()
+                    ds.create_user(client_id)
+                    user_id = ds.get_user()[0]
+                else:
+                    user_id = ''
+            post_data_api(client_id,user_id)
+            post_error_api(client_id,user_id)
+            post_event_api(client_id,user_id)
+            time.sleep(1)
+        except Exception as e:
+            print(str(e))
