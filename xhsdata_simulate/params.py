@@ -1,6 +1,6 @@
 # coding: utf-8
 import uuid, random, time, urllib, filedata,dbservice
-
+import get_address
 __author__ = 'zhangtaichao'
 
 host = "http://123.56.143.227:4180"
@@ -55,10 +55,10 @@ def common_param(client_id,user_id):
 
 
 def api_data_param():
-    row = dbservice.DBService().get_area()
-    row = row[0]
+    row = get_address.randomAddress()
+    country = '中国'
     if row is not None:
-        ip,country,province,city,area = row
+        province,city,area = row
         if province == city:
             city = area
         area = '{} {} {}'.format(province,city,area)

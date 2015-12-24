@@ -65,7 +65,9 @@ if __name__ == '__main__':
                 else:
                     user_id = ''
             post_data_api(client_id,user_id)
-            post_error_api(client_id,user_id)
+            if random.randint(1,100) > 90:
+                print('send a error')
+                post_error_api(client_id,user_id)
             post_event_api(client_id,user_id)
             time.sleep(1)
         except Exception as e:
