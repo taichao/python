@@ -1,0 +1,68 @@
+商户表 sh_shop
+shop_id int(11) 商户主键    否，主键/自增
+phone   varchar(11) 商户手机号，主号，登陆，唯一    否，唯一索引
+other_phone varchar(16) 其他联系方式，  是
+shop_name   varchar(32) 商户名称    否
+shop_linkman    varchar(32) 商户联系人  否
+shop_linkman_head   varchar(128)    联系人头像  是，给定默认头像
+passwd  varchar(32) 商户密码MD5加密 否
+status  tinyint 商户状态，0：正常，1：禁用  否
+create_time datetime    创建时间    否
+update_time datetime    修改时间    否
+
+商户当前绑定银行卡 sh_shop_card
+shop_id int(11) 商户主键    否
+shop_card_num   varchar(20) 商户借记卡账号  否
+shop_card_bank  varchar(30) 借记卡开户行    否
+shop_card_user  varchar(20) 商户借记卡开户行    否
+status  tinyint 当前状态，0：提交，1：审核中，2：信息不符或者其他原因审核不通过，3：通过，4：已更换，此卡是商户之前使用过的银行卡   否，默认为0
+create_time datetime    创建时间    否
+update_time datetime    最后状态更新时间    否
+create_ip   varchar(20) 操作人当前IP地址    否
+spam_time   datetime    审核通过时间    是
+spam_admin  int(11) 审核管理员  是
+spam_idea   varchar(64) 审核不通过时，添加审核提示语言，告知商户如何修改    是
+
+商户渠道 sh_shop_channel
+shop_channel_id int(11) 商户渠道ID,自增 否
+shop_id int（11）   商户ID  否
+shop_qrcode_url varchar(128)    商户二维码图片地址  否
+shop_channel_name   varchar(64) 商户渠道名称    否
+shop_channel_desc   text    商户渠道描述    否
+create_time datetime    渠道创建时间    否
+update_time datetime    渠道修改时间    否
+status  tinyint 当前状态，0：正常，1：已经删除  否，默认为：0
+
+商户累计总表 sh_shop_collect
+shop_id int（11）   商户ID  否
+scan_qr bigint  累计扫码数  否，0
+download    bigint  累计下载量  否，0
+reg bigint  累计注册量  否，0
+buy bigint  累计消费金额    否，0
+pay bigint  累计充值金额    否，0
+collect double  总收益  否，0.0
+withdraw    double  可提现金额  否，0.0
+collect_yestoday    double  昨日收益    否，0.0
+create_time datetime    数据最后更新时间    否，CURRENT_DATETIME
+
+商户收益 sh_shop_income
+shop_id int（11）   商户ID  否
+scan_qr bigint  扫码数  否，0
+download    bigint  下载数  否，0
+reg bigint  注册数  否，0
+buy bigint  购买金额    否，0
+pay bigint  充值金额    否，0
+income  double  当日总收益  否，0.0
+income_desc text    收入计算公式    否
+create_time datetime    数据生成时间    否，CURRENT_DATETIME
+
+商户提现 sh_shop_withdraw
+shop_id int（11）   商户ID  否
+shop_card_num   varchar(20) 商户借记卡账号  否
+money   double  提现金额    否，>= 100*N
+status  tinyint 提现状态，0:提交，1:已接受，2:已打款，2：问题提现   否，0
+show    tinyint 客户端是否删除，0：不删除，1：删除，    否，-
+create_time datetime    提现记录提交时间    否
+admin_id    bigint  打款人ID    是
+problem text    打款中，出现不能打款的问题描述  是
+update_time datetime    提现成功时的记录    是
