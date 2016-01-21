@@ -3,7 +3,7 @@
 import config.param as param
 from qiniu import Auth, PersistentFop, build_op, op_save
 
-key_src= 'o_1a4v9o1qpk9l19766sp1nor13cvb.mp4'
+key_src= '赤壁赋第一讲赏读.mp4'
 
 q = Auth(param.AccessKey,param.SecretKey)
 
@@ -12,9 +12,10 @@ pfop = PersistentFop(q,param.bucket,param.pipeline)
 #op = op_save('avthumb/m3u8/segtime/10/vcodec/libx264/s/320x240')
 
 ops = {
-    'segtime':10,
+    'r':24,
+    'vb':'56k'
 }
-op = build_op('avthumb','m3u8',**ops)
+op = build_op('avthumb','flv',**ops)
 ops = []
 ops.append(op)
 ret, info = pfop.execute(key_src, ops, 1)
